@@ -1,0 +1,25 @@
+services:
+  jellyfin:
+    image: lscr.io/linuxserver/jellyfin:latest
+    container_name: jellyfin
+    environment:
+      - PUID=1000   # Default user ID (admin). Change if you created a specific user.
+      - PGID=100    # Default group ID (users).
+      - TZ=America/New_York
+    volumes:
+      # Config: Stores your users, watch history, and posters
+      - ./jellyfin_config:/config
+      
+      # MEDIA: REPLACE THE LEFT SIDE WITH YOUR ACTUAL ABSOLUTE PATH
+      # Example: /srv/dev-disk-by-uuid-1234-5678/Media:/data/media
+      - /srv/YOUR_DISK_UUID_HERE/Media:/data/media
+      
+    ports:
+      - 8096:8096
+      
+    # HARDWARE ACCELERATION (Crucial for Raspberry Pi 4)
+    # This allows Jellyfin to see the Pi's Graphics Card (GPU)
+    devices:
+      - /dev/dri:/dev/dri
+      
+    restart: unless-stopped
